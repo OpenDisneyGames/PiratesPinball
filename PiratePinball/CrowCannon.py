@@ -4,7 +4,7 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: CrowCannon.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
@@ -181,7 +181,7 @@ class CrowCannon(PinballErrand):
 
     def crowCannonIntroIn(self, ballIndex, args):
         if self.seenTutorial:
-            print 'why are you here?!?!'
+            print('why are you here?!?!')
             return
         self.tutorial()
 
@@ -418,7 +418,7 @@ class CrowCannon(PinballErrand):
             sgode.pyode.dBodySetLinearVel(ball.body, -2.4, 6, 34)
             self.board.pbTaskMgr.doMethodLater(2, self.changeGravity, 'changegravity')
         if ball == None:
-            print ' --- ERROR : Bad cannon error: cannonState = %d, ballsOnTable = %d' % (self.cannonState, self.board.ballsOnTable)
+            print(' --- ERROR : Bad cannon error: cannonState = %d, ballsOnTable = %d' % (self.cannonState, self.board.ballsOnTable))
             self.cannonState = 0
             return
         ball.update()
@@ -443,7 +443,7 @@ class CrowCannon(PinballErrand):
         self.board.myTransition.fadeOut(1.5)
 
     def crowTimer(self, ballIndex, args):
-        print 'going to bone brig'
+        print('going to bone brig')
         self.board.changeToZone(1)
         self.board.boatModel.reparentTo(hidden)
         self.board.brigModel.reparentTo(render)

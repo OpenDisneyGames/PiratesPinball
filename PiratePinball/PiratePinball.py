@@ -11,23 +11,24 @@ from pandac.PandaModules import *
 from pinballbase.odeConstructs import *
 from pinballbase.PinballElements import *
 from pinballbase.fpsmeter import *
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.Transitions import *
 import sgode.pyode, Localizer
 from pinballbase.ContactParams import *
 import pinballbase.PinballErrand, PirateBoard
 from pinballbase.Cheater import Cheater
-from PirateWaterEffects import PirateWaterEffects
+from .PirateWaterEffects import PirateWaterEffects
 from pinballbase.LocalizerHelper import LocalizerHelper
-from TreasureChests import TreasureChests
-from SkullAlleys import SkullAlleys
-from DeckHatches import DeckHatches
-from StairCase import StairCase
-from CannonArea import CannonArea
-from CrowCannon import CrowCannon
-from BoneBrig import BoneBrig
-from MultiBall import MultiBall
-from TopDeck import TopDeck
+from .TreasureChests import TreasureChests
+from .SkullAlleys import SkullAlleys
+from .DeckHatches import DeckHatches
+from .StairCase import StairCase
+from .CannonArea import CannonArea
+from .CrowCannon import CrowCannon
+from .BoneBrig import BoneBrig
+from .MultiBall import MultiBall
+from .TopDeck import TopDeck
+import importlib
 EDITMODE = False
 DEFAULT_BALL_START_POS = Point3(9.3, 0.9, 0.6)
 
@@ -146,7 +147,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         self.credsCheater = Cheater('creds', self.credsCallBack)
         self.musicCheater = Cheater('music', self.musicCallBack)
         self.myBallSaveManager = BallSaveManager(self.beacons['laneBeacon2'])
-        for e in self.errands.values():
+        for e in list(self.errands.values()):
             e.finishSetup()
 
         self.bonusManager = BonusManager(self)
@@ -263,12 +264,12 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         self.display.grayScreen.reparentTo(hidden)
         self.display.controlLabels[0].reparentTo(hidden)
         self.localizerListIndex = min(max(self.localizerListIndex, 0), len(self.localizerMyList) - 1)
-        print 'Showing string named %s ' % self.localizerMyList[self.localizerListIndex]
+        print('Showing string named %s ' % self.localizerMyList[self.localizerListIndex])
         self.display.unlockDisplay()
         self.display.show(getattr(Localizer, self.localizerMyList[self.localizerListIndex]))
 
     def reloadLocalizer(self, extra=None):
-        reload(Localizer)
+        importlib.reload(Localizer)
         self.loadStringToDisplay(0)
 
     def toggleFlipperNoise(self):
@@ -333,12 +334,12 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
             self.topArea()
 
     def callCreateBoard(self):
-        reload(PirateBoard)
+        importlib.reload(PirateBoard)
         self.createBoardFromEditorFile()
 
     def createBoardFromEditorFile(self):
         PirateBoard.createBoard(self)
-        for p in self.proxPoints.values():
+        for p in list(self.proxPoints.values()):
             p.setPBTaskMgr(self.pbTaskMgr)
 
     def explorePolys(self):
@@ -353,16 +354,16 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
 
     def reloadSoundsAndText(self):
         self.notify.debug('About to reload sounds')
-        print 'Reloading sounds'
-        for (key, p) in self.pirateSounds.items():
+        print('Reloading sounds')
+        for (key, p) in list(self.pirateSounds.items()):
             del p
             del self.pirateSounds[key]
 
-        for (key, p) in self.pirateDialogue.items():
+        for (key, p) in list(self.pirateDialogue.items()):
             del p
             del self.pirateDialogue[key]
 
-        for (key, p) in self.pirateMusic.items():
+        for (key, p) in list(self.pirateMusic.items()):
             del p
             del self.pirateMusic[key]
 
@@ -383,20 +384,20 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         base.camLens.setFov(40)
         self.credsCheater.wake()
         self.musicCheater.wake()
-        for (key, p) in self.proxPoints.items():
+        for (key, p) in list(self.proxPoints.items()):
             p.wake()
 
-        for (key, p) in self.beacons.items():
+        for (key, p) in list(self.beacons.items()):
             p.wake()
 
-        for (key, p) in self.triggers.items():
+        for (key, p) in list(self.triggers.items()):
             p.wake()
 
-        for (key, p) in self.boardObjects.items():
+        for (key, p) in list(self.boardObjects.items()):
             sgode.pyode.dGeomEnable(p.geom)
             p.show()
 
-        for (key, e) in self.errands.items():
+        for (key, e) in list(self.errands.items()):
             self.notify.debug('About to wake %s' % e.getName())
             e.wake()
 
@@ -451,20 +452,20 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         self.lostBallMgr.sleep()
         self.credsCheater.sleep()
         self.musicCheater.sleep()
-        for (key, p) in self.proxPoints.items():
+        for (key, p) in list(self.proxPoints.items()):
             p.sleep()
 
-        for (key, p) in self.beacons.items():
+        for (key, p) in list(self.beacons.items()):
             p.sleep()
 
-        for (key, p) in self.triggers.items():
+        for (key, p) in list(self.triggers.items()):
             p.sleep()
 
-        for (key, p) in self.boardObjects.items():
+        for (key, p) in list(self.boardObjects.items()):
             sgode.pyode.dGeomDisable(p.geom)
             p.hide()
 
-        for (key, e) in self.errands.items():
+        for (key, e) in list(self.errands.items()):
             self.notify.debug('About to sleep %s' % e.getName())
             e.sleep()
 
@@ -503,15 +504,15 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
             self.dialogueMgr.destroy()
             self.dialogueMgr = None
         self.notify.debug('About to delete sounds')
-        for (key, p) in self.pirateSounds.items():
+        for (key, p) in list(self.pirateSounds.items()):
             del p
             del self.pirateSounds[key]
 
-        for (key, p) in self.pirateDialogue.items():
+        for (key, p) in list(self.pirateDialogue.items()):
             del p
             del self.pirateDialogue[key]
 
-        for (key, p) in self.pirateMusic.items():
+        for (key, p) in list(self.pirateMusic.items()):
             del p
             del self.pirateMusic[key]
 
@@ -544,22 +545,22 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         del self.odeSpace
         del self.odeContactGroup
         del self.worldInfo
-        for (key, p) in self.proxPoints.items():
+        for (key, p) in list(self.proxPoints.items()):
             p.destroy()
             del self.proxPoints[key]
 
         del self.proxPoints
-        for (key, p) in self.beacons.items():
+        for (key, p) in list(self.beacons.items()):
             p.destroy()
             del self.beacons[key]
 
         del self.beacons
-        for (key, p) in self.triggers.items():
+        for (key, p) in list(self.triggers.items()):
             p.destroy()
             del self.triggers[key]
 
         del self.triggers
-        for (key, p) in self.boardObjects.items():
+        for (key, p) in list(self.boardObjects.items()):
             p.destroy()
             del self.boardObjects[key]
 
@@ -570,19 +571,19 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         if self.dialogueMgr != None:
             self.dialogueMgr.destroy()
         self.notify.debug('About to delete sounds')
-        for (key, p) in self.pirateSounds.items():
+        for (key, p) in list(self.pirateSounds.items()):
             del p
             del self.pirateSounds[key]
 
-        for (key, p) in self.pirateDialogue.items():
+        for (key, p) in list(self.pirateDialogue.items()):
             del p
             del self.pirateDialogue[key]
 
-        for (key, p) in self.pirateMusic.items():
+        for (key, p) in list(self.pirateMusic.items()):
             del p
             del self.pirateMusic[key]
 
-        for (key, e) in self.errands.items():
+        for (key, e) in list(self.errands.items()):
             self.notify.debug('About to destroy %s' % e.getName())
             e.destroy()
             del self.errands[key]
@@ -591,7 +592,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         self.notify.debug('About to delete camera positions')
         del self.cameraPositions
         self.notify.debug('About to delete ref points')
-        for (key, p) in self.refPoints.items():
+        for (key, p) in list(self.refPoints.items()):
             p.destroy()
             del self.refPoints[key]
 
@@ -711,13 +712,13 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
     def toggleGeoms(self):
         if self.geomsEnabled:
             self.geomsEnabled = False
-            print 'all boardobjects disabled'
-            for g in self.boardObjects.values():
+            print('all boardobjects disabled')
+            for g in list(self.boardObjects.values()):
                 sgode.pyode.dGeomDisable(g.geom)
 
         self.geomsEnabled = True
-        print 'all boardobjects enabled'
-        for g in self.boardObjects.values():
+        print('all boardobjects enabled')
+        for g in list(self.boardObjects.values()):
             sgode.pyode.dGeomEnable(g.geom)
 
     def setInTutorialMode(self, bool):
@@ -752,7 +753,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
 
     def pauseGame(self):
         if self.inTutorialMode:
-            for e in self.errands.values():
+            for e in list(self.errands.values()):
                 e.skip()
 
             return
@@ -761,7 +762,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
                 self.cameraMovement.pause()
             self.pbTaskMgr.removeDelayedMethod('resumeBallsAfterPause')
             self.pbTaskMgr.pause()
-            for e in self.errands.values():
+            for e in list(self.errands.values()):
                 e.pause()
 
             self.myBallSaveManager.pause()
@@ -778,7 +779,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
             if self.cameraMovement != None and self.cameraMovement.getState() == CInterval.SPaused:
                 self.cameraMovement.resume()
             self.pbTaskMgr.resume()
-            for e in self.errands.values():
+            for e in list(self.errands.values()):
                 e.resume()
 
             self.myBallSaveManager.resume()
@@ -943,7 +944,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         if self.showAllStatus == -1:
             self.display.show(Localizer.ppDisplayGameName)
             return
-        if self.showAllStatus == len(self.errands.values()):
+        if self.showAllStatus == len(list(self.errands.values())):
             self.showAllStatus = 0
             if self.myScore > self.highestScoreEver:
                 self.highestScoreEver = self.myScore
@@ -951,10 +952,10 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
             self.pbTaskMgr.doMethodLater(2, self.showStatus, 'statusShower')
             return
         delayTime = 2.0
-        if self.errands.values()[self.showAllStatus].getStatus() == None:
+        if list(self.errands.values())[self.showAllStatus].getStatus() == None:
             delayTime = 0
         else:
-            self.display.show(self.errands.values()[self.showAllStatus].getStatus())
+            self.display.show(list(self.errands.values())[self.showAllStatus].getStatus())
         self.showAllStatus = self.showAllStatus + 1
         self.pbTaskMgr.doMethodLater(delayTime, self.showStatus, 'statusShower')
         return
@@ -986,10 +987,10 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
                     self.musicMgr.playMusic('MainDeck')
             elif self.currentZone == 1:
                 self.musicMgr.playMusic('BoneBrig')
-        for e in self.errands.values():
+        for e in list(self.errands.values()):
             e.changeToZone(self.currentZone)
 
-        for b in self.boardObjects.values():
+        for b in list(self.boardObjects.values()):
             if b.getZone() == zoneNumber:
                 sgode.pyode.dGeomEnable(b.geom)
                 if b.normallySeen:
@@ -1020,10 +1021,10 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         for b in range(0, len(self.balls)):
             self.deactivateBall(b)
 
-        for e in self.errands.values():
+        for e in list(self.errands.values()):
             e.reset()
 
-        for (key, beacon) in self.beacons.items():
+        for (key, beacon) in list(self.beacons.items()):
             beacon.setState(Beacon.ONCE)
 
         self.waterEffects.turnOn()
@@ -1579,9 +1580,9 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         if cycleBeaconNumber > len(self.beacons):
             return
         if cycleBeaconNumber != 0:
-            self.beacons.values()[(cycleBeaconNumber - 1)].revert()
+            list(self.beacons.values())[(cycleBeaconNumber - 1)].revert()
         if cycleBeaconNumber != len(self.beacons):
-            self.beacons.values()[cycleBeaconNumber].setState(Beacon.ON, fake=True)
+            list(self.beacons.values())[cycleBeaconNumber].setState(Beacon.ON, fake=True)
         self.pbTaskMgr.doMethodLater(0.3, self.cycleBeacons, 'cyclebeacons', [cycleBeaconNumber])
 
     def deactivateBall(self, ballIndex, ball=None):
@@ -1646,12 +1647,12 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
             self.display.hudElements['rightInstructions1']['text'] = Localizer.pDisplayPlungerInstructions
             self.gameOver = False
             self.display.startMapMoving(time=3)
-            for e in self.errands.values():
+            for e in list(self.errands.values()):
                 e.start()
 
             return
         if self.inTutorialMode:
-            for e in self.errands.values():
+            for e in list(self.errands.values()):
                 e.continueOn()
 
     def dropBall(self, getNextBall, tryNumber=0, bx=DEFAULT_BALL_START_POS[0], by=DEFAULT_BALL_START_POS[1], bz=DEFAULT_BALL_START_POS[2], camReset=True, ballMode=0, resetGravity=True):
@@ -1674,7 +1675,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
                     self.display.show(Localizer.pLaunch)
             else:
                 if tryNumber > 60:
-                    print "I've waited a minute, I'm not waiting any longer"
+                    print("I've waited a minute, I'm not waiting any longer")
                     return
                 else:
                     self.pbTaskMgr.doMethodLater(2, self.dropBall, 'dropballagainlanefull', [getNextBall, tryNumber + 1, DEFAULT_BALL_START_POS[0], DEFAULT_BALL_START_POS[1], DEFAULT_BALL_START_POS[2], True, ballMode])
@@ -1847,7 +1848,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         self.drainTimer(ballIndex, ballMode=ballMode)
 
     def checkProxPoints(self, currentBallIndex):
-        pointList = self.proxPoints.values()
+        pointList = list(self.proxPoints.values())
         for i in pointList:
             if i.zone == self.currentZone:
                 i.checkPoint(currentBallIndex, self.balls[currentBallIndex])
@@ -1895,7 +1896,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
                 self.rightSlingshot.enableSlingshotForce()
             else:
                 self.rightSlingshot.disableSlingshotForce()
-        pointList = self.proxPoints.values()
+        pointList = list(self.proxPoints.values())
         pointsToCheck = [ point for point in pointList if point.zone == self.currentZone if point.active ]
         lowBall = False
         for ballIndex in range(0, len(self.balls)):
@@ -1917,7 +1918,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         while collisionInfoList != None:
             collisionInfo = sgode.pyode.getCollisionInfoFromPointer(collisionInfoList)
             self.handleCollision(collisionInfo)
-            collisionInfoList = collisionInfo.next
+            collisionInfoList = collisionInfo.__next__
 
         sgode.pyode.clearCollisionInfoList(self.worldInfo.collisionInfoList)
         self.worldInfo.collisionInfoList = None
@@ -1929,7 +1930,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
         sgode.pyode.dJointGroupEmpty(self.odeContactGroup)
 
     def handleCollision(self, collisionInfo):
-        if ODENodePath.geomsToNodePaths.has_key(collisionInfo.geom1) and ODENodePath.geomsToNodePaths.has_key(collisionInfo.geom2):
+        if collisionInfo.geom1 in ODENodePath.geomsToNodePaths and collisionInfo.geom2 in ODENodePath.geomsToNodePaths:
             obj1, obj2 = ODENodePath.geomsToNodePaths[collisionInfo.geom1], ODENodePath.geomsToNodePaths[collisionInfo.geom2]
             bumper = None
             ball = None
@@ -1952,7 +1953,7 @@ class PiratePinball(direct.showbase.DirectObject.DirectObject):
                 trigger = obj2
                 ball = obj1
             if trigger != None:
-                if self.triggers.has_key(trigger.getName()):
+                if trigger.getName() in self.triggers:
                     self.triggers[trigger.getName()].gotHit(ball)
         return
 

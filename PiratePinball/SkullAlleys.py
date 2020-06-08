@@ -4,7 +4,7 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: SkullAlleys.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
@@ -60,10 +60,10 @@ class SkullAlleys(PinballErrand):
             self.board.boardObjects[('outLaneDrop%d' % i)].drop()
             self.board.proxPoints[('outLaneHOLE%d' % i)].setActive(False)
             if self.hatchCovers[(i - 1)] != None:
-                print self.hatchCovers[(i - 1)]
+                print(self.hatchCovers[(i - 1)])
                 hatchMove.append(self.hatchCovers[(i - 1)].hprInterval(time, Point3(0.0, 0.0, 0.0), blendType='easeOut'))
 
-        print hatchMove
+        print(hatchMove)
         hatchMovement.append(Parallel(*hatchMove))
         hatchMovement.start()
         return

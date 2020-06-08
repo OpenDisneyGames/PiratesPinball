@@ -89,7 +89,7 @@ class MainMenu(DirectFrame):
         self.guiElements['sure'].reparentTo(hidden)
 
     def runBoard(self):
-        for sound in self.menuSounds.values():
+        for sound in list(self.menuSounds.values()):
             sound.stop()
 
         self.gameWrapper.runBoard()
@@ -138,7 +138,7 @@ class MainMenu(DirectFrame):
         self.reparentTo(aspect2d)
 
     def destroy(self):
-        for (key, p) in self.menuSounds.items():
+        for (key, p) in list(self.menuSounds.items()):
             del p
             del self.menuSounds[key]
 
@@ -156,7 +156,7 @@ class MainMenu(DirectFrame):
             ge = self.guiElements.popitem()
             ge[1].destroy()
 
-        for i in self.guiIntervals.values():
+        for i in list(self.guiIntervals.values()):
             i.finish()
 
         self.gui.removeNode()

@@ -25,7 +25,7 @@ class DirectMaxWidthLabel(DirectLabel):
     def setText(self):
         DirectLabel.setText(self)
         for i in range(self['numStates']):
-            ost = self.component('text' + `i`)
+            ost = self.component('text' + repr(i))
             lineWidth = ost.textNode.getWidth()
             if lineWidth == 0:
                 self.idealScale = 1

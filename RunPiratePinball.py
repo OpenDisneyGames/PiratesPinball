@@ -5,7 +5,7 @@
 # Embedded file name: RunPiratePinball.py
 import string, re, codecs
 from random import randint
-from _winreg import *
+from winreg import *
 import base64, direct.directbase.DirectStart
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
@@ -81,7 +81,7 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
          '', '', '', '', '', '', '', '', '', '']
         self.scoreList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.loadPinballScores()
-        print 'DEBUG: calling main menu'
+        print('DEBUG: calling main menu')
         self.mainMenu = MainMenu(self)
         return
 
@@ -114,7 +114,7 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
             scoreFile.write(scoreString)
             scoreFile.close()
         except:
-            print 'Problems writing Score file'
+            print('Problems writing Score file')
 
     def readHighScoreFile(self):
         score = None
@@ -124,7 +124,7 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
             score = base64.decodestring(score)
             scoreFile.close()
         except:
-            print 'Problems reading Score file'
+            print('Problems reading Score file')
             score = 'aaaaaa'
 
         if score[:4] != 'P---':
@@ -135,7 +135,7 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
                 scoreFile.write(e)
                 scoreFile.close()
             except:
-                print 'Problems reading Score file'
+                print('Problems reading Score file')
             else:
                 score = s
         return score[4:]
@@ -244,7 +244,7 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
 
     def runBoard(self):
         self.mainMenu.hide()
-        for b in self.buttons.values():
+        for b in list(self.buttons.values()):
             b.reparentTo(hidden)
 
         for element in self.pinballPalaceElements:
@@ -316,7 +316,7 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
                 self.pauseMenu.destroy()
                 self.piratePinball.accept('enter', self.piratePinball.pressStart)
             except:
-                print 'ERROR -- Problems destroying pauseMenu'
+                print('ERROR -- Problems destroying pauseMenu')
 
     def hideLoadingScreens(self):
         self.loadLabel.reparentTo(hidden)
@@ -410,26 +410,26 @@ class RunPiratePinball(direct.showbase.DirectObject.DirectObject):
                     problems.append(task.name)
 
         if problems:
-            print taskMgr
+            print(taskMgr)
             msg = "You can't leave the Pinball Board until you clean up your tasks:"
             for task in problems:
                 msg += '\n  ' + task
 
             self.notify.error(msg)
         if ivalMgr.getNumIntervals() > 0:
-            print ivalMgr
+            print(ivalMgr)
             self.notify.error("You can't leave the Pinball Board until you clean up your intervals.")
         allowedHooks = [
          'resetClock', 'window-event', 'killPinballWorld', 'reportPinballScore', 'click-mouse1-apButton', 'click-mouse1-mpButton', 'click-mouse1-ppButton', 'click-mouse1-exitButton', 'enter-mpButton', 'exit-mpButton', 'enter-apButton', 'exit-apButton', 'enter-ppButton', 'exit-ppButton']
         problems = []
-        for hook in messenger.dict.keys():
+        for hook in list(messenger.dict.keys()):
             if hook in allowedHooks:
                 pass
             else:
                 problems.append(hook)
 
         if problems:
-            print messenger
+            print(messenger)
             msg = "You can't leave the PinballBoard until you clean up your hooks:"
             for hook in problems:
                 msg += '\n  ' + hook

@@ -3,13 +3,13 @@
 # Decompiled from: PyPy Python 3.6.9 (2ad108f17bdb, Apr 07 2020, 03:05:35)
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: EditorPanel.py
-import Tkinter
-from Tkinter import *
-from tkFileDialog import asksaveasfilename
+import tkinter
+from tkinter import *
+from tkinter.filedialog import asksaveasfilename
 import Pmw
 from pinballbase.odeConstructs import *
 import sgode.pyode
-from PinballElements import *
+from .PinballElements import *
 
 class EditorPanel:
     __module__ = __name__
@@ -38,11 +38,11 @@ class EditorPanel:
         proxPoint = False
         odeElement = False
         refPoint = False
-        if self.boardWorld.proxPoints.has_key(base.direct.selected.last.getName()):
+        if base.direct.selected.last.getName() in self.boardWorld.proxPoints:
             proxPoint = True
-        if self.boardWorld.boardObjects.has_key(base.direct.selected.last.getName()):
+        if base.direct.selected.last.getName() in self.boardWorld.boardObjects:
             odeElement = True
-        if self.boardWorld.refPoints.has_key(base.direct.selected.last.getName()):
+        if base.direct.selected.last.getName() in self.boardWorld.refPoints:
             refPoint = True
         if refPoint:
             currentPoint = self.boardWorld.refPoints[base.direct.selected.last.getName()]
@@ -50,7 +50,7 @@ class EditorPanel:
             currentPoint.setName(self.proxNameEntry.get())
             self.boardWorld.refPoints[currentPoint.getName()] = currentPoint
             del self.boardWorld.refPoints[oldName]
-            print 'RefPoint Changes Made'
+            print('RefPoint Changes Made')
             return
         if not proxPoint and not odeElement:
             return
@@ -113,7 +113,7 @@ class EditorPanel:
                 self.errandEntry.config(state=NORMAL)
                 currentElement.bumperPower = self.bumperPowerEntry.get()
                 currentElement.eggfile = self.bumperEggEntry.get()
-            if self.boardWorld.triggers.has_key(base.direct.selected.last.getName()) and self.cSelect != 'Trigger' and self.cSelect != 'BumperTrigger':
+            if base.direct.selected.last.getName() in self.boardWorld.triggers and self.cSelect != 'Trigger' and self.cSelect != 'BumperTrigger':
                 self.delayEntry.delete(0, END)
                 self.inMethodEntry.delete(0, END)
                 self.outMethodEntry.delete(0, END)
@@ -124,8 +124,8 @@ class EditorPanel:
                 self.bumperEggEntry.delete(0, END)
                 self.triggerDelayEntry.delete(0, END)
                 del self.boardWorld.triggers[base.direct.selected.last.getName()]
-            if self.boardWorld.triggers.has_key(base.direct.selected.last.getName()) and (self.cSelect == 'Trigger' or self.cSelect == 'BumperTrigger'):
-                print 'updating info'
+            if base.direct.selected.last.getName() in self.boardWorld.triggers and (self.cSelect == 'Trigger' or self.cSelect == 'BumperTrigger'):
+                print('updating info')
                 currentTrigger = self.boardWorld.triggers[base.direct.selected.last.getName()]
                 currentTrigger.name = self.proxNameEntry.get()
                 currentTrigger.callInName = self.inMethodEntry.get()
@@ -138,7 +138,7 @@ class EditorPanel:
                     del self.boardWorld.triggers[base.direct.selected.last.getName()]
                     del self.boardWorld.boardObjects[base.direct.selected.last.getName()]
                     base.direct.selected.last.setName(currentTrigger.name)
-            if not self.boardWorld.triggers.has_key(base.direct.selected.last.getName()) and (self.cSelect == 'Trigger' or self.cSelect == 'BumperTrigger'):
+            if base.direct.selected.last.getName() not in self.boardWorld.triggers and (self.cSelect == 'Trigger' or self.cSelect == 'BumperTrigger'):
                 currentTrigger = Trigger(self.proxNameEntry.get())
                 currentTrigger.callInName = self.inMethodEntry.get()
                 currentTrigger.args = self.argsEntry.get()
@@ -151,12 +151,12 @@ class EditorPanel:
                     base.direct.selected.last.setName(currentTrigger.name)
                 else:
                     self.boardWorld.triggers[currentTrigger.name] = currentTrigger
-            if not self.boardWorld.triggers.has_key(base.direct.selected.last.getName()) and self.cSelect != 'Trigger' and self.cSelect != 'BumperTrigger':
+            if base.direct.selected.last.getName() not in self.boardWorld.triggers and self.cSelect != 'Trigger' and self.cSelect != 'BumperTrigger':
                 if base.direct.selected.last.getName() != self.proxNameEntry.get():
                     self.boardWorld.boardObjects[self.proxNameEntry.get()] = currentElement
                     del self.boardWorld.boardObjects[base.direct.selected.last.getName()]
                     base.direct.selected.last.setName(self.proxNameEntry.get())
-        print 'Changes Made'
+        print('Changes Made')
         return
 
     def makeChanges1(self):
@@ -323,9 +323,9 @@ class EditorPanel:
         frame.pack(fill=X, side=LEFT)
 
     def fileMenu(self, frame):
-        file_btn = Tkinter.Menubutton(frame, text='File', underline=0)
+        file_btn = tkinter.Menubutton(frame, text='File', underline=0)
         file_btn.pack(side=TOP, padx='2m')
-        file_btn.menu = Tkinter.Menu(file_btn)
+        file_btn.menu = tkinter.Menu(file_btn)
         file_btn.menu.add_command(label='Save', underline=0, command=self.pinballEditor.saveBoard)
         file_btn.menu.add_command(label='Save As', underline=0, command=self.saveAs)
         file_btn['menu'] = file_btn.menu

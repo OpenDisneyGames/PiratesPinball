@@ -32,8 +32,8 @@ class ODENodePath(NodePath):
     def __init__(self, geom, odeWorld, isStatic, name, zone=0, category=WALL_CATEGORY):
         baseName = name
         i = 2
-        while ODENodePath.namesToGeoms.has_key(name):
-            name = baseName + `i`
+        while name in ODENodePath.namesToGeoms:
+            name = baseName + repr(i)
             i += 1
 
         NodePath.__init__(self, name)
@@ -95,7 +95,7 @@ class ODENodePath(NodePath):
             sgode.pyode.dGeomSetCategoryBits(self.geom, self.category)
 
     def update(self):
-        pos = apply(Point3, sgode.pyode.dVector3ToTuple(sgode.pyode.dGeomGetPosition(self.geom)))
+        pos = Point3(*sgode.pyode.dVector3ToTuple(sgode.pyode.dGeomGetPosition(self.geom)))
         sgode.pyode.dGeomGetQuaternion(self.geom, self.odeQuat.cast())
         self.quat.setW(self.odeQuat[3])
         self.quat.setZ(self.odeQuat[2])
@@ -138,9 +138,9 @@ class ODENodePath(NodePath):
         self.hide()
 
     def destroy(self):
-        if ODENodePath.geomsToNodePaths.has_key(self.geom):
+        if self.geom in ODENodePath.geomsToNodePaths:
             del ODENodePath.geomsToNodePaths[self.geom]
-        if ODENodePath.namesToGeoms.has_key(self.name):
+        if self.name in ODENodePath.namesToGeoms:
             del ODENodePath.namesToGeoms[self.name]
         if not self.isStatic:
             sgode.pyode.dBodyDestroy(self.body)
@@ -151,10 +151,10 @@ class ODENodePath(NodePath):
         return self.zone
 
     def getODEPos(self):
-        return apply(Vec3, sgode.pyode.dVector3ToTuple(sgode.pyode.dBodyGetPosition(self.body)))
+        return Vec3(*sgode.pyode.dVector3ToTuple(sgode.pyode.dBodyGetPosition(self.body)))
 
     def getODEVel(self):
-        return apply(Vec3, sgode.pyode.dVector3ToTuple(sgode.pyode.dBodyGetLinearVel(self.body)))
+        return Vec3(*sgode.pyode.dVector3ToTuple(sgode.pyode.dBodyGetLinearVel(self.body)))
 
 
 class ODEBox(ODENodePath):
@@ -263,7 +263,7 @@ class ODEMesh(ODENodePath):
                     if geom is GeomTriStrip or geom is GeomTriFan:
                         pass
                     else:
-                        print "can't handle", type(geom)
+                        print("can't handle", type(geom))
 
 
 class Slingshot(NodePath):

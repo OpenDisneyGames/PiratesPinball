@@ -7,6 +7,7 @@ import direct.directbase.DirectStart
 from direct.showbase.DirectObject import DirectObject
 from direct.gui.DirectGui import *
 import direct.task.Task, time
+from functools import reduce
 
 class FPSMeter(DirectObject):
     __module__ = __name__

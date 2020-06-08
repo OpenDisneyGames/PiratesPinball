@@ -14,7 +14,7 @@ class LocalizerHelper:
         self.allLocalStringNames = dir(LocalizerEnglish)
         self.allLocalStrings = {}
         for s in self.allLocalStringNames:
-            exec 'value = Localizer.' + s
+            exec('value = Localizer.' + s)
             if isinstance(value, list):
                 for li in range(len(value)):
                     self.allLocalStrings['%s%d' % (s, li)] = [
@@ -25,16 +25,16 @@ class LocalizerHelper:
                     self.allLocalStrings[s] = [
                      s, value]
             else:
-                print 'Not list or string!'
-                print s
+                print('Not list or string!')
+                print(s)
 
         try:
             outfile = open('localizerExcell.txt', 'w')
         except IOError:
-            print 'There was an error (probably read-only) writing to localizerExcel.txt'
+            print('There was an error (probably read-only) writing to localizerExcel.txt')
             return
 
-        for s in self.allLocalStrings.values():
+        for s in list(self.allLocalStrings.values()):
             outfile.write(s[0] + '\t' + s[1] + '\n')
 
         outfile.write('\n\n')

@@ -4,7 +4,7 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: StairCase.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
@@ -116,7 +116,7 @@ class StairCase(PinballErrand):
         self.board.myTransition.fadeIn(1.5)
 
     def alleyTopIn(self, ballIndex, args):
-        print 'entering bone brig alley with ball %d' % ballIndex
+        print('entering bone brig alley with ball %d' % ballIndex)
 
     def alleyTopTimer(self, ballIndex, args):
         sgode.pyode.dBodyEnable(self.board.balls[ballIndex].body)
@@ -129,7 +129,7 @@ class StairCase(PinballErrand):
         self.board.pirateSounds['StairCase_Wind'].setVolume(1)
 
     def alleyBottomIn(self, ballIndex, args):
-        print 'exiting bonebrig alley'
+        print('exiting bonebrig alley')
         self.board.myTransition.fadeOut(1.5)
         self.board.pbTaskMgr.doMethodLater(1.5, self.resetFromBoneBrig, 'resetFromBoneBrig', [ballIndex])
         self.volDown = LerpFunc(self.changeRollVol, duration=1.0, fromData=1.0, toData=0.0)

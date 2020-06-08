@@ -696,7 +696,7 @@ def createBoard(self):
     piece.setHpr(0.0, 0.0, 0.0)
     self.boardObjects[piece.getName()] = piece
     piece.setCategory(WALL_CATEGORY, True)
-    for object in self.boardObjects.values():
+    for object in list(self.boardObjects.values()):
         object.setODETransformFromNodePath()
         if object.normallySeen:
             object.reparentTo(render)

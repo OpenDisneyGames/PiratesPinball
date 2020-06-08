@@ -3,11 +3,11 @@
 # Decompiled from: PyPy Python 3.6.9 (2ad108f17bdb, Apr 07 2020, 03:05:35)
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: PinballEditor.py
-from odeConstructs import *
-from EditorPanel import *
+from .odeConstructs import *
+from .EditorPanel import *
 from direct.directtools.DirectCameraControl import *
 from direct.tkpanels import Placer
-from PinballElements import *
+from .PinballElements import *
 import shutil
 
 class PinballEditor:
@@ -16,13 +16,13 @@ class PinballEditor:
     def __init__(self, bw, dfn):
         self.defaultFilename = dfn
         self.boardWorld = bw
-        for object in self.boardWorld.boardObjects.values():
+        for object in list(self.boardWorld.boardObjects.values()):
             object.reparentTo(render)
 
-        for object in self.boardWorld.refPoints.values():
+        for object in list(self.boardWorld.refPoints.values()):
             object.reparentTo(render)
 
-        for point in self.boardWorld.proxPoints.values():
+        for point in list(self.boardWorld.proxPoints.values()):
             point.setVisible(True)
 
         self.boardWorld.filmSize = 60
@@ -50,14 +50,14 @@ class PinballEditor:
         self.boardWorld.accept('mouse1-up', self.updatePanel)
         self.autoCam = True
         if not base.direct:
-            print 'You do not have Direct Tools enabled in your Config.prc, fix that before continuing'
+            print('You do not have Direct Tools enabled in your Config.prc, fix that before continuing')
             return
         self.editorPanel = EditorPanel(self, self.boardWorld)
         return
 
     def openPlacer(self):
         if not base.direct:
-            print 'You do not have Direct Tools enabled in your Config.prc, fix that before continuing'
+            print('You do not have Direct Tools enabled in your Config.prc, fix that before continuing')
             return
         if base.direct.selected.last != None:
             Placer.place(base.direct.selected.last)
@@ -65,7 +65,7 @@ class PinballEditor:
 
     def centerCam(self):
         if not base.direct:
-            print 'You do not have Direct Tools enabled in your Config.prc, fix that before continuing'
+            print('You do not have Direct Tools enabled in your Config.prc, fix that before continuing')
             return
         if self.autoCam:
             base.direct.cameraControl.spawnMoveToView(5)
@@ -74,7 +74,7 @@ class PinballEditor:
         self.autoCam = not self.autoCam
 
     def toggleHoles(self):
-        for p in self.boardWorld.proxPoints.values():
+        for p in list(self.boardWorld.proxPoints.values()):
             p.toggleHoleVisibility()
 
     def toggleHinges(self):
@@ -99,7 +99,7 @@ class PinballEditor:
         odeHingePos = sgode.pyode.dRealArray(3)
         sgode.pyode.dJointGetHingeAnchor(flipper.flipperHinge, odeHingePos.cast())
         hingePos = Vec3(odeHingePos[0], odeHingePos[1], odeHingePos[2])
-        print hingePos
+        print(hingePos)
         cylinderModel = loader.loadModelCopy('pinballbase/cylinder')
         cylinderModel.setScale(0.1, 0.1, 3)
         cylinderModel.setPos(hingePos[0], hingePos[1], hingePos[2])
@@ -115,33 +115,33 @@ class PinballEditor:
         del self.boardWorld.rightFlippers[0:len(self.boardWorld.rightFlippers)]
         self.boardWorld.proxPoints.clear()
         self.boardWorld.triggers.clear()
-        for b in self.boardWorld.boardObjects.values():
+        for b in list(self.boardWorld.boardObjects.values()):
             b.destroy()
 
         self.boardWorld.boardObjects.clear()
         self.boardWorld.createFlippers()
         self.boardWorld.createSlingshots()
         self.boardWorld.callCreateBoard()
-        for object in self.boardWorld.boardObjects.values():
+        for object in list(self.boardWorld.boardObjects.values()):
             object.reparentTo(render)
 
-        for point in self.boardWorld.proxPoints.values():
+        for point in list(self.boardWorld.proxPoints.values()):
             point.setVisible(True)
 
     def updatePanel(self):
         if not base.direct:
-            print 'You do not have Direct Tools enabled in your Config.prc, fix that before continuing'
+            print('You do not have Direct Tools enabled in your Config.prc, fix that before continuing')
             return
         if base.direct.selected.last == None or base.direct.selected.last.isEmpty():
             return
         proxPoint = False
         odeElement = False
         refPoint = False
-        if self.boardWorld.proxPoints.has_key(base.direct.selected.last.getName()):
+        if base.direct.selected.last.getName() in self.boardWorld.proxPoints:
             proxPoint = True
-        if self.boardWorld.boardObjects.has_key(base.direct.selected.last.getName()):
+        if base.direct.selected.last.getName() in self.boardWorld.boardObjects:
             odeElement = True
-        if self.boardWorld.refPoints.has_key(base.direct.selected.last.getName()):
+        if base.direct.selected.last.getName() in self.boardWorld.refPoints:
             refPoint = True
         self.editorPanel.proxNameEntry.delete(0, END)
         self.editorPanel.delayEntry.delete(0, END)
@@ -233,7 +233,7 @@ class PinballEditor:
                 self.editorPanel.errandEntry.config(state=DISABLED)
             self.editorPanel.proxNameEntry.insert(END, base.direct.selected.last.getName())
             self.editorPanel.zoneEntry.insert(END, self.boardWorld.boardObjects[base.direct.selected.last.getName()].getZone())
-            if (catbits == BUMPER_TRIGGER_CATEGORY or catbits == TRIGGER_CATEGORY) and self.boardWorld.triggers.has_key(base.direct.selected.last.getName()):
+            if (catbits == BUMPER_TRIGGER_CATEGORY or catbits == TRIGGER_CATEGORY) and base.direct.selected.last.getName() in self.boardWorld.triggers:
                 currentTrigger = self.boardWorld.triggers[base.direct.selected.last.getName()]
                 self.editorPanel.inMethodEntry.insert(END, currentTrigger.callInName)
                 self.editorPanel.errandEntry.insert(END, currentTrigger.errand)
@@ -366,15 +366,15 @@ class PinballEditor:
         try:
             outfile = open(filename, 'w')
         except IOError:
-            print 'There was an error (probably read-only) writing to ' + filename
-            print 'Now your backup is read-only, make sure to switch that back to normal'
+            print('There was an error (probably read-only) writing to ' + filename)
+            print('Now your backup is read-only, make sure to switch that back to normal')
             return
 
         outfile.write('#Auto-Generated Code describing ODE collision solids, triggers, RefPoints, and ProxPoints\n')
         outfile.write('from pinballbase.odeConstructs import *\n')
         outfile.write('from pinballbase.PinballElements import *\n')
         outfile.write('def createBoard( self ):\n')
-        for object in self.boardWorld.boardObjects.values():
+        for object in list(self.boardWorld.boardObjects.values()):
             oldsca = object.model.getScale()
             newsca = object.getScale()
             sca0 = oldsca[0] * newsca[0]
@@ -424,7 +424,7 @@ class PinballEditor:
         outfile.write('\t\t\tobject.reparentTo( render )\n')
         outfile.write('\t\t\tobject.update() # sanity check\n')
         outfile.write('\n\n\t#Add all the proximity triggers\n')
-        for point in self.boardWorld.proxPoints.values():
+        for point in list(self.boardWorld.proxPoints.values()):
             if not point.writeOut:
                 continue
             oldsca = point.getScale()
@@ -450,7 +450,7 @@ class PinballEditor:
             outfile.write(writeString)
 
         outfile.write('\n\n\t#Add all the RefPoints\n')
-        for point in self.boardWorld.refPoints.values():
+        for point in list(self.boardWorld.refPoints.values()):
             pos = point.getPos()
             hpr = point.getHpr()
             scale = point.getScale()
@@ -459,5 +459,5 @@ class PinballEditor:
 
         outfile.write('\n\n')
         outfile.close()
-        print 'File written successfully'
+        print('File written successfully')
         return

@@ -23,7 +23,7 @@ class DirectMaxScaleButton(DirectButton):
     def setText(self):
         DirectButton.setText(self)
         for i in range(self['numStates']):
-            ost = self.component('text' + `i`)
+            ost = self.component('text' + repr(i))
             lineWidth = ost.textNode.getWidth()
             lineHeight = ost.textNode.getHeight()
             if lineWidth == 0:

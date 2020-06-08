@@ -57,7 +57,7 @@ class PauseMenu(DirectFrame):
             ge = self.guiElements.popitem()
             ge[1].destroy()
 
-        for i in self.guiIntervals.values():
+        for i in list(self.guiIntervals.values()):
             i.finish()
 
         self.gui.removeNode()

@@ -3,7 +3,7 @@
 # Decompiled from: PyPy Python 3.6.9 (2ad108f17bdb, Apr 07 2020, 03:05:35)
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: EvilShipFSM.py
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
@@ -109,7 +109,7 @@ class EvilShipFSM(FSM):
         self.sailingSequence.start()
 
     def printString(self, string):
-        print string
+        print(string)
 
     def filterSailing(self, request, args):
         if request == 'Sinking':

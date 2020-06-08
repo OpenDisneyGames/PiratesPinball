@@ -33,7 +33,7 @@ class HelpMenu(DirectFrame):
         self.tips = loader.loadTexture('dgd%sArt/textures/tips_bg.jpg' % self.gameWrapper.boardName)
         self.control = loader.loadTexture('dgd%sArt/textures/control_bg.jpg' % self.gameWrapper.boardName)
         self.pressed = False
-        self.guiElements['next'] = DirectButton(guiId='HelpMenunext', parent=self, relief=None, image=[self.gui.find('**/next_up'), self.gui.find('**/next_down'), self.gui.find('**/next_roll'), self.gui.find('**/next_up')], scale=self.guiScale, pressEffect=True, command=self.next)
+        self.guiElements['next'] = DirectButton(guiId='HelpMenunext', parent=self, relief=None, image=[self.gui.find('**/next_up'), self.gui.find('**/next_down'), self.gui.find('**/next_roll'), self.gui.find('**/next_up')], scale=self.guiScale, pressEffect=True, command=self.__next__)
         self.guiElements['back'] = DirectButton(guiId='HelpMenuback', parent=self, relief=None, image=[self.gui.find('**/back_up'), self.gui.find('**/back_down'), self.gui.find('**/back_roll'), self.gui.find('**/back_up')], scale=self.guiScale, pressEffect=True, command=self.back)
         self.guiElements['logo'] = DirectLabel(guiId='HelpMenulogo', parent=self, relief=None, image=self.gui.find('**/logo'), scale=self.guiScale, sortOrder=0)
         self.guiElements['version'] = DirectLabel(guiId='HelpVersion', parent=self, relief=None, pos=(1.23,
@@ -44,7 +44,7 @@ class HelpMenu(DirectFrame):
                                                                                                                                                 1), text=self.version, sortOrder=4)
         return
 
-    def next(self):
+    def __next__(self):
         if not self.pressed:
             self.pressed = True
             self.guiElements['backgroundImage'].setTexture(self.tips, 1)
@@ -69,7 +69,7 @@ class HelpMenu(DirectFrame):
             ge = self.guiElements.popitem()
             ge[1].destroy()
 
-        for i in self.guiIntervals.values():
+        for i in list(self.guiIntervals.values()):
             i.finish()
 
         self.gui.removeNode()

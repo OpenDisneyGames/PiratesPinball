@@ -108,7 +108,7 @@ class PirateWaterEffects:
             self.bothWaterWakeMovements[i].setT(offset * i)
 
     def printMessage(self, message):
-        print message
+        print(message)
 
     def stopMoving(self):
         for wp in range(len(self.waterPlanes)):

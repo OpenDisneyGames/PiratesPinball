@@ -4,7 +4,7 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: DeckHatches.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
@@ -162,7 +162,7 @@ class DeckHatches(PinballErrand):
         self.ballInNotOut[(args[0] - 1)][ballIndex] = True
 
     def hatchOut(self, ballIndex, args):
-        if self.ballInNotOut[(args[0] - 1)].has_key(ballIndex):
+        if ballIndex in self.ballInNotOut[(args[0] - 1)]:
             del self.ballInNotOut[(args[0] - 1)][ballIndex]
         if self.board.balls[ballIndex].getODEPos()[2] > 0:
             sgode.pyode.dGeomSetCollideBits(self.board.balls[ballIndex].geom, 4294967295 ^ DROPPED_CATEGORY)

@@ -4,7 +4,7 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: BoneBrig.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *

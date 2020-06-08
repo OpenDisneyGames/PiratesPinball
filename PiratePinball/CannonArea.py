@@ -4,13 +4,13 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: CannonArea.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
 from pinballbase.odeConstructs import *
 import Localizer
-from EvilShipFSM import EvilShipFSM
+from .EvilShipFSM import EvilShipFSM
 import copy
 from pandac.PandaModules import *
 
@@ -367,7 +367,7 @@ class CannonArea(PinballErrand):
         self.seaSerpentPieces['tail'] = NodePath(cm1.generate())
         self.seaSerpentPieces['tail'].setTexture(loader.loadTexture('piratepinball/art/skull_island/textures/seaserpenttail.png'))
         self.seaSerpentPieces['tail'].setPos(-9, 0, -0.4)
-        for ssp in self.seaSerpentPieces.values():
+        for ssp in list(self.seaSerpentPieces.values()):
             ssp.reparentTo(self.seaSerpent)
             ssp.setHpr(0, 0, 0)
             ssp.node().setAttrib(LightAttrib.makeAllOff())
@@ -397,7 +397,7 @@ class CannonArea(PinballErrand):
         self.seaSerpentSequence.append(self.seaSerpent.posInterval(self.seaSerpentCrossTime, VBase3(-155, 75, -1.5)))
         self.seaSerpentSequence.append(Func(self.seaSerpentWiggle.finish))
         self.seaSerpentSequence.append(Func(self.seaSerpent.reparentTo, hidden))
-        for ssp in self.seaSerpentPieces.values():
+        for ssp in list(self.seaSerpentPieces.values()):
             self.board.proxPoints['SeaSerpent%s' % ssp.getName()] = ProxPoint(self.board.odeWorld, self.board.odeSpace, 0, 0, 0, 2.7, 3.0, 'SeaSerpent%s' % ssp.getName(), 'CannonArea', callMethodIn=self.serpentHit, args=[], zone=2, writeOut=False)
             self.board.proxPoints[('SeaSerpent%s' % ssp.getName())].reparentTo(ssp)
 

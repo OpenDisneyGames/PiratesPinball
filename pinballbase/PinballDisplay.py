@@ -275,13 +275,13 @@ class PinballDisplay:
         if self.grayScreen:
             self.grayScreen.removeNode()
         taskMgr.remove('idletimer')
-        for (key, p) in self.hudElements.items():
+        for (key, p) in list(self.hudElements.items()):
             self.notify.debug('deleteing hud element: %s' % key)
             p.destroy()
             p.removeNode()
             del self.hudElements[key]
 
-        for (key, p) in self.tutorialElements.items():
+        for (key, p) in list(self.tutorialElements.items()):
             self.notify.debug('deleteing tutorial element: %s' % key)
             p.destroy()
             p.removeNode()
@@ -377,7 +377,7 @@ class PinballDisplay:
         while len(newLines) > self.numberOfLines:
             self.notify.warning('----------------------------------------------------------------------------')
             self.notify.warning('displayCommonText: Number of lines to displayed greater then lines available')
-            print newLines
+            print(newLines)
             self.notify.warning('----------------------------------------------------------------------------')
             newLines.pop()
 
@@ -543,14 +543,14 @@ class PinballDisplay:
         if newState == 3:
             self.show(Localizer.pDisplayStartMessage)
         if newState == 2:
-            for i in self.tutorialElements.values():
+            for i in list(self.tutorialElements.values()):
                 i.reparentTo(aspect2d, 50)
 
             self.tutorialElements['tutorialLabel'].reparentTo(aspect2d, 60)
             self.tutorialElements['continueOn'].reparentTo(aspect2d, 60)
             self.tutorialElements['skipIt'].reparentTo(aspect2d, 60)
         if newState == 1 or newState == 0 or newState == 3:
-            for i in self.tutorialElements.values():
+            for i in list(self.tutorialElements.values()):
                 i.reparentTo(hidden)
                 self.instructions['text'] = ''
 
@@ -560,14 +560,14 @@ class PinballDisplay:
             for i in range(3):
                 self.lines[i]['text'] = ''
 
-            for he in self.hudElements.values():
+            for he in list(self.hudElements.values()):
                 he.reparentTo(hidden)
 
             for bi in self.ballIcons:
                 bi.reparentTo(hidden)
 
         if newState == 1 or newState == 3:
-            for he in self.hudElements.values():
+            for he in list(self.hudElements.values()):
                 he.reparentTo(aspect2d, 50)
 
             self.updateScore(self.myScore)
@@ -603,7 +603,7 @@ class PinballDisplay:
     def myUpper(self, newstring):
         if Localizer.myLanguage == 'english':
             return newstring.upper()
-        newstring = unicode(newstring, 'utf8')
+        newstring = str(newstring, 'utf8')
         upperNewString = newstring.upper()
         return upperNewString.encode('utf8')
 

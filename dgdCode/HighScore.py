@@ -103,7 +103,7 @@ class HighScore(DirectFrame):
         return
 
     def dirtyWordFilter(self, initials):
-        print 'filter'
+        print('filter')
         badWords = [
          'ASS', 'FCK', 'DIK', 'DIC', 'TIT', 'CUM', 'FAG', 'SEX', 'GAY', 'FUK', 'VAG', 'PEE', 'HO', 'FU', 'FUC', 'KKK']
         self.flag = False
@@ -146,7 +146,7 @@ class HighScore(DirectFrame):
             ge = self.guiElements.popitem()
             ge[1].destroy()
 
-        for i in self.guiIntervals.values():
+        for i in list(self.guiIntervals.values()):
             i.finish()
 
         self.gui.removeNode()

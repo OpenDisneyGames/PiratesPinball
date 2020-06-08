@@ -25,14 +25,14 @@ class PandaToMaya:
         z = pos[2] - self.posOffset[2]
         mayaPos = Vec3(float(x / self.scaleFactor), float(z / self.scaleFactor), -float(y / self.scaleFactor))
         mayaHpr = Vec3(float(hpr[0] - self.hprOffset[0]), float(hpr[1] - self.hprOffset[1]), float(hpr[2] - self.hprOffset[2]))
-        print 'Begin Conversion'
-        print 'Panda pos and hpr'
-        print pos
-        print hpr
-        print 'Maya pos and hpr equivalents'
-        print mayaPos
-        print mayaHpr
-        print 'Conversion Complete'
+        print('Begin Conversion')
+        print('Panda pos and hpr')
+        print(pos)
+        print(hpr)
+        print('Maya pos and hpr equivalents')
+        print(mayaPos)
+        print(mayaHpr)
+        print('Conversion Complete')
 
 
 class BumpManager:
@@ -158,7 +158,7 @@ class PolyExplore:
                             polyCount += exploded.getNumVertices() / 3
 
                 for child in nodePath.getChildrenAsList():
-                    if not self.polyCache.has_key(child):
+                    if child not in self.polyCache:
                         self.polyCache[child] = self.getPolyCount(child)
                     polyCount += self.polyCache[child]
 
@@ -281,9 +281,9 @@ class LostBallManager:
         self.board.pbTaskMgr.doMethodLater(1, self.checkForLostBalls, 'checkforlostballs', [inactiveCounter, launchLaneCounter, stillCounter])
 
     def autoFindBall(self):
-        print ''
-        print '------------------------------ Auto-finding ball --------------------------------'
-        print ''
+        print('')
+        print('------------------------------ Auto-finding ball --------------------------------')
+        print('')
         for b in self.board.balls:
             self.board.deactivateBall(-1, b)
 
@@ -343,9 +343,9 @@ class LostBallManager:
         self.board.pbTaskMgr.doMethodLater(1, self.checkForLostBalls, 'checkforlostballs', [inactiveCounter, launchLaneCounter, stillCounter])
 
     def autoFindBallMermaid(self):
-        print ''
-        print '------------------------------ Auto-finding ball --------------------------------'
-        print ''
+        print('')
+        print('------------------------------ Auto-finding ball --------------------------------')
+        print('')
         self.board.ballMgr.deactivateAll(forceLocked=True)
         self.board.gateIn(0, [])
         newPos = self.board.refPoints[('Zone%dStart' % self.board.currentZone)].getPos()
@@ -571,14 +571,14 @@ class MusicManager:
 
     def startTutorial(self):
         ivalMgr.finishIntervalsMatching('volFadeInterval')
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(LerpFunctionInterval(self.changeMusicVolume, duration=0.5, fromData=self.musicVolume, toData=self.musicVolume / 2.0))
             self.volFadeInterval.start()
 
     def stopTutorial(self):
         ivalMgr.finishIntervalsMatching('volFadeInterval')
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(LerpFunctionInterval(self.changeMusicVolume, duration=0.5, fromData=self.musicVolume / 2.0, toData=self.musicVolume))
             self.volFadeInterval.start()
@@ -600,11 +600,11 @@ class MusicManager:
         return
 
     def playJingle(self, jingle, musicContinue=False):
-        if not self.allMusic.has_key(jingle):
+        if jingle not in self.allMusic:
             self.notify.warning(" playJingle: Looking to play %s, wasn't found in music list" % jingle)
             return
         self.jinglePlaying = True
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             if musicContinue:
                 self.musicTimeStopped = self.allMusic[self.currentMusic].getTime()
                 self.allMusic[self.currentMusic].stop()
@@ -615,7 +615,7 @@ class MusicManager:
         self.board.pbTaskMgr.doMethodLater(self.allMusic[jingle].length(), self.stopJingle, 'jingledonestop%s' % jingle, [musicContinue])
 
     def pauseMusicPlaying(self):
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.musicTimeStopped = self.allMusic[self.currentMusic].getTime()
             self.allMusic[self.currentMusic].stop()
 
@@ -630,7 +630,7 @@ class MusicManager:
         if self.jingleSong != None and self.jinglePlaying:
             self.jingleTimeStopped = self.allMusic[self.jingleSong].getTime()
             self.allMusic[self.jingleSong].stop()
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(LerpFunctionInterval(self.changeMusicVolume, duration=0.5, fromData=self.musicVolume, toData=0.0))
             self.volFadeInterval.append(Func(self.pauseMusicPlaying))
@@ -643,7 +643,7 @@ class MusicManager:
             self.allMusic[self.jingleSong].setTime(self.jingleTimeStopped)
             self.allMusic[self.jingleSong].play()
             self.jingleTimeStopped = 0.0
-        if self.allMusic.has_key(self.currentMusic) and self.musicTimeStopped != 0.0 and not self.jinglePlaying:
+        if self.currentMusic in self.allMusic and self.musicTimeStopped != 0.0 and not self.jinglePlaying:
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(Func(self.resumeMusicPlaying))
             self.volFadeInterval.append(LerpFunctionInterval(self.changeMusicVolume, duration=0.5, fromData=0.0, toData=self.musicVolume))
@@ -654,14 +654,14 @@ class MusicManager:
         i = ivalMgr.getInterval('jinglesequence')
         if i != None:
             ivalMgr.removeInterval(i)
-        if self.jingleSong != None and self.jinglePlaying and self.allMusic.has_key(self.jingleSong):
+        if self.jingleSong != None and self.jinglePlaying and self.jingleSong in self.allMusic:
             self.allMusic[self.jingleSong].stop()
         if self.volFadeInterval != None and not self.volFadeInterval.isStopped():
             self.volFadeInterval.finish()
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.allMusic[self.currentMusic].setLoop(False)
             self.allMusic[self.currentMusic].stop()
-        if self.allMusic.has_key(self.oldMusic) and self.allMusic[self.oldMusic].status() == AudioSound.PLAYING:
+        if self.oldMusic in self.allMusic and self.allMusic[self.oldMusic].status() == AudioSound.PLAYING:
             self.allMusic[self.oldMusic].setLoop(False)
             self.allMusic[self.oldMusic].stop()
         del self.allMusic
@@ -677,20 +677,20 @@ class MusicManager:
     def lowerPlayingVolume(self):
         if self.currentMusic == None:
             return
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.allMusic[self.currentMusic].setVolume(self.musicVolume / 2.0)
         return
 
     def restorePlayingVolume(self):
         if self.currentMusic == None:
             return
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.allMusic[self.currentMusic].setVolume(self.musicVolume)
         return
 
     def stopMusic(self, fadeTime=0.5):
         ivalMgr.finishIntervalsMatching('volFadeInterval')
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(LerpFunctionInterval(self.changeMusicVolume, duration=fadeTime, fromData=self.musicVolume, toData=0.0))
             self.volFadeInterval.append(Func(self.allMusic[self.currentMusic].stop))
@@ -711,13 +711,13 @@ class MusicManager:
             return
         if self.currentMusic == name:
             return
-        if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+        if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
             ivalMgr.finishIntervalsMatching('volFadeInterval')
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(LerpFunctionInterval(self.fadeVolume, duration=fadeTime, fromData=0.0, toData=self.musicVolume))
             self.volFadeInterval.append(Func(self.allMusic[self.currentMusic].stop))
             self.volFadeInterval.start()
-            if self.allMusic.has_key(self.oldMusic) and self.allMusic[self.oldMusic].status() == AudioSound.PLAYING:
+            if self.oldMusic in self.allMusic and self.allMusic[self.oldMusic].status() == AudioSound.PLAYING:
                 self.allMusic[self.oldMusic].stop()
             self.oldMusic = self.currentMusic
             self.currentMusic = name
@@ -729,9 +729,9 @@ class MusicManager:
             self.volFadeInterval = Sequence(name='volFadeInterval')
             self.volFadeInterval.append(LerpFunctionInterval(self.fadeVolume, duration=fadeTime, fromData=0.0, toData=self.musicVolume))
             self.volFadeInterval.start()
-            if self.allMusic.has_key(self.currentMusic) and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
+            if self.currentMusic in self.allMusic and self.allMusic[self.currentMusic].status() == AudioSound.PLAYING:
                 self.allMusic[self.currentMusic].stop()
-            if self.allMusic.has_key(self.oldMusic) and self.allMusic[self.oldMusic].status() == AudioSound.PLAYING:
+            if self.oldMusic in self.allMusic and self.allMusic[self.oldMusic].status() == AudioSound.PLAYING:
                 self.allMusic[self.oldMusic].stop()
             self.oldMusic = self.currentMusic
             self.currentMusic = name
@@ -1308,7 +1308,7 @@ class BonusManager:
         self.bonusSequence = Sequence(name='bonussequence')
         self.bonusSequence.append(Func(self.board.display.show, Localizer.pDisplayBonusStart, False, True))
         self.bonusSequence.append(Wait(self.timeBetweenMessages))
-        for e in self.board.errands.values():
+        for e in list(self.board.errands.values()):
             bonusResult = e.getBonus()
             if bonusResult != None:
                 if bonusResult[1] != 0:

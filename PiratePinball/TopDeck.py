@@ -4,7 +4,7 @@
 # [PyPy 7.3.1 with MSC v.1912 32 bit]
 # Embedded file name: TopDeck.py
 from pinballbase.PinballErrand import PinballErrand
-from PirateDisplay import PirateDisplay
+from .PirateDisplay import PirateDisplay
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from pinballbase.PinballElements import *
@@ -244,8 +244,8 @@ class TopDeck(PinballErrand):
     def getCorrectFlightPlan(self, seagullNumber, flightPlan, startPerch, endPerch):
         self.notify.debug('Seagull Number %d wants to go to perch %d from perch %d' % (seagullNumber, endPerch, startPerch))
         backwards = False
-        if not self.seagullPath.has_key('Path%d-%d' % (startPerch, endPerch)):
-            if self.seagullPath.has_key('Path%d-%d' % (endPerch, startPerch)):
+        if 'Path%d-%d' % (startPerch, endPerch) not in self.seagullPath:
+            if 'Path%d-%d' % (endPerch, startPerch) in self.seagullPath:
                 temp = startPerch
                 startPerch = endPerch
                 endPerch = temp
